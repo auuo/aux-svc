@@ -8,3 +8,5 @@ edition = "2018"
 [dependencies]
 config = "0.11"
 lazy_static = "1.4.0"
+thiserror = "1.0"
+anyhow = "1.0"

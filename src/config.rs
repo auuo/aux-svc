@@ -44,7 +44,7 @@ lazy_static! {
             ($name:ident, $key:expr);
         )+
     ) => {
-        pub struct ConfigKey {}
+        pub struct ConfigKey;
 
         impl ConfigKey {
         $(
