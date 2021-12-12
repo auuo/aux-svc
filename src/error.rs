@@ -4,7 +4,7 @@ use thiserror::Error;
 /// 包装业务异常与未知异常
 #[derive(Error, Debug)]
 pub enum AppError {
-    #[error("todo")] // todo
+    #[error("{}", (.0).1)]
     Application((i64, &'static str, &'static str), Option<anyhow::Error>),
 
     #[error("unknown error, {0}")]
