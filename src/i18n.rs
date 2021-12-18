@@ -7,6 +7,7 @@ use std::io::Read;
 use std::path::Path;
 
 use anyhow::anyhow;
+pub use fluent::fluent_args;
 pub use fluent::FluentArgs as Args;
 use fluent::FluentResource;
 use fluent_bundle::bundle::FluentBundle;
