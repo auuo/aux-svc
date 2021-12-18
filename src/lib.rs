@@ -4,3 +4,4 @@ pub use error::AppError;
 mod config;
 mod enums;
 mod error;
+pub mod i18n;
