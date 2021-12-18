@@ -5,7 +5,7 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum AppError {
     #[error("{}", (.0).1)]
-    Application((i64, &'static str, &'static str), Option<anyhow::Error>),
+    Application((i64, &'static str, &'static str), Option<anyhow::Error>, Option<crate::i18n::Args<'static>>),
 
     #[error("unknown error, {0}")]
     Unknown(anyhow::Error),
@@ -19,11 +19,19 @@ impl From<anyhow::Error> for AppError {
 
 impl AppError {
     pub fn new(code: (i64, &'static str, &'static str)) -> Self {
-        Self::Application(code, None)
+        Self::Application(code, None, None)
     }
 
     pub fn new_with_err(code: (i64, &'static str, &'static str), err: anyhow::Error) -> Self {
-        Self::Application(code, Some(err))
+        Self::Application(code, Some(err), None)
+    }
+
+    pub fn new_with_args(code: (i64, &'static str, &'static str), args: crate::i18n::Args<'static>) -> Self {
+        Self::Application(code, None, Some(args))
+    }
+
+    pub fn new_with_err_and_args(code: (i64, &'static str, &'static str), err: anyhow::Error, args: crate::i18n::Args<'static>) -> Self {
+        Self::Application(code, Some(err), Some(args))
     }
 }
 
