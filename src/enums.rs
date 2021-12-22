@@ -27,8 +27,9 @@
         $(
             $(#[$docs])*
             #[derive(Debug, Clone, Copy, Eq, PartialEq)]
+            #[repr(i8)]
             pub enum $enum_name {
-                $($name,)+
+                $($name = $num,)+
             }
 
             impl $enum_name {
@@ -39,9 +40,7 @@
                 }
 
                 pub fn get_num(&self) -> i8 {
-                    match self {
-                        $($enum_name::$name => $num,)+
-                    }
+                    self as i8
                 }
 
                 pub fn alias_of(alias: impl Into<String>) -> Option<Self> {
