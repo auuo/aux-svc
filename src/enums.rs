@@ -40,7 +40,7 @@
                 }
 
                 pub fn get_num(&self) -> i8 {
-                    self as i8
+                    *self as i8
                 }
 
                 pub fn alias_of(alias: impl Into<String>) -> Option<Self> {
