@@ -1,3 +1,20 @@
+/// 定义错误类型，携带一个错误码和 msg_key，msg key 可用于 i18n 使用
+///
+/// # Example
+///
+/// ```
+/// aux_svc::define_error! {
+///     pub AppError {
+///         MissBody(1, "miss_body");
+///         InvalidParams(2, "invalid_params");
+///     }
+/// }
+///
+/// println!(AppError::MissBody(None)); // 无 i18n 参数
+/// println!(AppError::InvalidParams(fluent::fluent_args![ // 传递 i18n 参数
+///     "field" => "name",
+/// ]))
+/// ```
 #[macro_export] macro_rules! define_error {
     (
         $(#[$docs:meta])*

@@ -4,14 +4,14 @@
 ///
 /// ```
 /// aux_svc::enums! {
-///     TaskStatus {
-///         (OPEN, "open", 0);
-///         (CLOSE, "close", 1);
+///     pub TaskStatus {
+///         Open(0, "open");
+///         Close(1, "close");
 ///     }
 /// }
 ///
-/// println!(TaskStatus::OPEN.get_alias());
-/// println!(TaskStatus::OPEN.get_num());
+/// println!(TaskStatus::Open.get_alias());
+/// println!(TaskStatus::Close.get_num());
 /// println!(TaskStatus::alias_of("open").unwrap());
 /// println!(TaskStatus::num_of(1).unwrap());
 /// ```
@@ -19,8 +19,8 @@
     (
         $(
             $(#[$docs:meta])*
-            $enum_name:ident {
-                $(($name:ident, $alias:expr, $num:expr);)+
+            $vis:vis $enum_name:ident {
+                $($name:ident($num:expr, $alias:expr);)+
             }
         )+
     ) => {
@@ -28,7 +28,7 @@
             $(#[$docs])*
             #[derive(Debug, Clone, Copy, Eq, PartialEq)]
             #[repr(i8)]
-            pub enum $enum_name {
+            $vis enum $enum_name {
                 $($name = $num,)+
             }
 
