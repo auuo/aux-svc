@@ -1,63 +1,49 @@
-use anyhow::Error;
-use thiserror::Error;
-
-/// 包装业务异常与未知异常
-#[derive(Error, Debug)]
-pub enum AppError {
-    #[error("{}", (.0).1)]
-    Application((i64, &'static str, &'static str), Option<anyhow::Error>, Option<crate::i18n::Args<'static>>),
-
-    #[error("unknown error, {0}")]
-    Unknown(anyhow::Error),
-}
-
-impl From<anyhow::Error> for AppError {
-    fn from(err: Error) -> Self {
-        Self::Unknown(err)
-    }
-}
-
-impl AppError {
-    pub fn new(code: (i64, &'static str, &'static str)) -> Self {
-        Self::Application(code, None, None)
-    }
-
-    pub fn new_with_err(code: (i64, &'static str, &'static str), err: anyhow::Error) -> Self {
-        Self::Application(code, Some(err), None)
-    }
-
-    pub fn new_with_args(code: (i64, &'static str, &'static str), args: crate::i18n::Args<'static>) -> Self {
-        Self::Application(code, None, Some(args))
-    }
-
-    pub fn new_with_err_and_args(code: (i64, &'static str, &'static str), err: anyhow::Error, args: crate::i18n::Args<'static>) -> Self {
-        Self::Application(code, Some(err), Some(args))
-    }
-}
-
-/// 定义业务异常
-///
-/// # Example
-///
-/// ```
-/// aux_svc::err_codes! {
-///    (INVALID_PARAMS, "wrong params, please check again", "invalid.params");
-/// }
-/// ```
-#[macro_export] macro_rules! err_codes {
+#[macro_export] macro_rules! define_error {
     (
-        $(
-            $(#[$docs:meta])*
-            ($name:ident, $code:expr, $msg:expr, $msg_key:expr);
-        )+
+        $(#[$docs:meta])*
+        $vis:vis $enum_name:ident {
+            $($name:ident($code:expr, $msg_key:expr);)+
+        }
     ) => {
-        pub struct ErrCode;
+        $(#[$docs])*
+        #[derive(Debug, thiserror::Error)]
+        $vis enum $enum_name {
+            $(
+                #[error("$name")]
+                $name(Option<$crate::i18n::Args<'static>>),
+            )+
 
-        impl ErrCode {
-        $(
-            $(#[$docs])*
-            pub const $name: (i64, &'static str, &'static str) = ($code, $msg, $msg_key);
-        )+
+            #[error("unknown error, {0}")]
+            Unknown(anyhow::Error),
+        }
+
+        impl $enum_name {
+            pub fn get_code(&self) -> Option<i32> {
+                match self {
+                    $($enum_name::$name(..) => Some($code),)+
+                    $enum_name::Unknown(..) => None,
+                }
+            }
+
+            pub fn get_msg_key(&self) -> Option<&'static str> {
+                match self {
+                    $($enum_name::$name(..) => Some($msg_key),)+
+                    $enum_name::Unknown(..) => None,
+                }
+            }
+
+            pub fn get_i18n_args(&self) -> Option<&$crate::i18n::Args<'static>> {
+                match self {
+                    $($enum_name::$name(a) => a.as_ref(),)+
+                    $enum_name::Unknown(..) => None,
+                }
+            }
+        }
+
+        impl From<anyhow::Error> for $enum_name {
+            fn from(err: anyhow::Error) -> Self {
+                Self::Unknown(err)
+            }
         }
     }
 }
