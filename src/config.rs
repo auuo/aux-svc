@@ -41,16 +41,18 @@ lazy_static! {
     (
         $(
             $(#[$docs:meta])*
-            ($name:ident, $key:expr);
+            $vis:vis $struct_name:ident {
+                $(($name:ident, $key:expr);)+
+            }
         )+
     ) => {
-        pub struct ConfigKey;
-
-        impl ConfigKey {
         $(
             $(#[$docs])*
-            pub const $name: &'static str = $key;
+            $vis struct $struct_name;
+
+            impl $struct_name {
+                $(pub const $name: &'static str = $key;)+
+            }
         )+
-        }
     }
 }
