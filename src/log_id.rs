@@ -19,8 +19,7 @@ fn a() -> String {
         Some(IpAddr::V6(v6)) => v6,
         None => Ipv6Addr::from(0),
     };
-    let v6 = v6.octets();
-    to_hex(v6)
+    format!("{:02x}", u128::from(v6))
 }
 
 /// 获得本地 ip，并不会真的发起请求，使用 udp 也不会有握手请求
@@ -28,20 +27,6 @@ fn local_ip() -> Option<IpAddr> {
     let socket = UdpSocket::bind("0.0.0.0:0").ok()?;
     socket.connect("8.8.8.8:80").ok()?;
     socket.local_addr().map(|addr| addr.ip()).ok()
-}
-
-const CHARS: &'static [u8] = b"0123456789abcdef";
-
-fn to_hex(s: [u8; 16]) -> String {
-    let mut v = Vec::with_capacity(s.len() * 2);
-    for byte in s {
-        v.push(CHARS[(byte >> 4) as usize]);
-        v.push(CHARS[(byte & 0xf) as usize]);
-    }
-
-    unsafe {
-        String::from_utf8_unchecked(v)
-    }
 }
 
 #[test]
