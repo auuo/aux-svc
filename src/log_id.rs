@@ -12,17 +12,20 @@ lazy_static! {
             None => Ipv6Addr::from(0),
         };
         format!("{:032x}", u128::from(v6))
-    }
+    };
 }
 
 /// 生成一个用于追踪作用的 log id
-/// 格式: 2 位版本号 + 13 位时间戳 + 32 位 ip + 6 位随机数 = 53 位
+/// 格式: 2 位版本号 + 13 位时间戳 + 32 位 ip + 6 位十六进制随机数 = 53 位
 pub fn gen_log_id() -> String {
     let mut id = String::new();
     id.push_str(VERSION);
     id.push_str(&Utc::now().timestamp_millis().to_string());
     id.push_str(&FORMAT_IP);
-    // 随机数，转 16 进制
+
+    use rand::Rng;
+    let rand_hex = format!("{:06x}", rand::thread_rng().gen_range(0..=0xffffff));
+    id.push_str(&rand_hex);
     id
 }
 
@@ -40,5 +43,5 @@ fn test_get_local_ip() {
 
 #[test]
 fn test_gen_log_id() {
-    println!("{}", gen_log_id);
+    println!("{}", gen_log_id());
 }
