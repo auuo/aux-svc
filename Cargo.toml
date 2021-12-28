@@ -16,3 +16,4 @@ intl-memoizer = "0.5.1"
 unic-langid = "0.9"
 chrono = "0.4.19"
 rand = "0.8"
+tokio = { version = "1", features = ["rt"] }
