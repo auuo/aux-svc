@@ -1,19 +1,2 @@
-[package]
-name = "aux-svc"
-version = "0.1.0"
-edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-config = "0.11"
-lazy_static = "1.4.0"
-thiserror = "1.0"
-anyhow = "1.0"
-fluent = "0.16.0"
-fluent-bundle = "0.15.2"
-intl-memoizer = "0.5.1"
-unic-langid = "0.9"
-chrono = "0.4.19"
-rand = "0.8"
-tokio = { version = "1", features = ["rt"] }
+[workspace]
+members = ["aux-context", "aux-logid", "aux-config", "aux-enums", "aux-i18n", "aux-error"]
