@@ -53,6 +53,7 @@ name = "aux-error"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "aux-i18n",
  "thiserror",
 ]
 

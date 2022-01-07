@@ -1,3 +1,5 @@
+pub use aux_i18n::Args;
+
 /// 定义错误类型，携带一个错误码和 msg_key，msg key 可用于 i18n 使用
 ///
 /// # Example
@@ -27,7 +29,7 @@
         $vis enum $enum_name {
             $(
                 #[error("$name")]
-                $name(Option<$crate::i18n::Args<'static>>),
+                $name(Option<$crate::Args<'static>>),
             )+
 
             #[error("unknown error, {0}")]
@@ -49,7 +51,7 @@
                 }
             }
 
-            pub fn get_i18n_args(&self) -> Option<&$crate::i18n::Args<'static>> {
+            pub fn get_i18n_args(&self) -> Option<&$crate::Args<'static>> {
                 match self {
                     $($enum_name::$name(a) => a.as_ref(),)+
                     $enum_name::Unknown(..) => None,
