@@ -10,8 +10,8 @@
 ///     }
 /// }
 ///
-/// println!(TaskStatus::Open.get_alias());
-/// println!(TaskStatus::Close.get_num());
+/// println!(TaskStatus::Open.alias());
+/// println!(TaskStatus::Close.num());
 /// println!(TaskStatus::alias_of("open").unwrap());
 /// println!(TaskStatus::num_of(1).unwrap());
 /// ```
@@ -33,13 +33,13 @@
             }
 
             impl $enum_name {
-                pub fn get_alias(&self) -> &'static str {
+                pub fn alias(&self) -> &'static str {
                     match self {
                         $($enum_name::$name => $alias,)+
                     }
                 }
 
-                pub fn get_num(&self) -> i8 {
+                pub fn num(&self) -> i8 {
                     *self as i8
                 }
 
