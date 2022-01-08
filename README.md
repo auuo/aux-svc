@@ -66,7 +66,7 @@ pub mod error {
 }
 ```
 
-括号中数字为错误码，字符串为 i18n 的 key。定义的错误除了用户显示定义的外还存在一个 `AppError::Unknown(anyhow::Error)` 用于包装其他所有类型的错误。定义错误项后可在程序中返回错误：
+括号中数字为错误码，字符串为 i18n 的 key。定义的错误除了用户显式定义的外还存在一个 `AppError::Unknown(anyhow::Error)` 用于包装其他所有类型的错误。定义错误项后可在程序中返回错误：
 
 ```rust
 fn create_blog(blog: Blog) -> Result<(), AppError> {
