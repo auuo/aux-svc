@@ -58,7 +58,7 @@ fn db_url() -> String {
 ```rust
 pub mod error {
     aux_error::define_error! {
-        pub AppError {
+        pub AppError<aux_i18n::Args<'static>> {
             MissBody(1, "miss_body");
             InvalidBlogLength(2, "invalid_blog_length");
         }
@@ -66,7 +66,7 @@ pub mod error {
 }
 ```
 
-括号中数字为错误码，字符串为 i18n 的 key。定义的错误除了用户显示定义的外还存在一个 `AppError::Unknown(anyhow::Error)` 用于包装其他所有类型的错误。定义错误项后可在程序中返回错误：
+括号中数字为错误码，字符串为 msg key，这里用作 i18n key，错误声明接着一个类型声明，用来指定可额外携带的数据类型，这里携带 i18n 的参数。定义的错误除了用户显示定义的外还存在一个 `AppError::Unknown(anyhow::Error)` 用于包装其他所有类型的错误。定义错误项后可在程序中返回错误：
 
 ```rust
 fn create_blog(blog: Blog) -> Result<(), AppError> {

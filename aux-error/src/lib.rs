@@ -1,26 +1,24 @@
-pub use aux_i18n::Args;
-
 /// 定义错误类型，携带一个错误码和 msg_key，msg key 可用于 i18n 使用
 ///
 /// # Example
 ///
 /// ```
 /// aux_svc::define_error! {
-///     pub AppError {
+///     pub AppError<aux_i18n::Args<'static>> {
 ///         MissBody(1, "miss_body");
 ///         InvalidParams(2, "invalid_params");
 ///     }
 /// }
 ///
 /// println!(AppError::MissBody(None)); // 无 i18n 参数
-/// println!(AppError::InvalidParams(fluent::fluent_args![ // 传递 i18n 参数
+/// println!(AppError::InvalidParams(Some(fluent::fluent_args![ // 传递 i18n 参数
 ///     "field" => "name",
-/// ]))
+/// ])))
 /// ```
 #[macro_export] macro_rules! define_error {
     (
         $(#[$docs:meta])*
-        $vis:vis $enum_name:ident {
+        $vis:vis $enum_name:ident<$args_type:ty> {
             $($name:ident($code:expr, $msg_key:expr);)+
         }
     ) => {
@@ -29,7 +27,7 @@ pub use aux_i18n::Args;
         $vis enum $enum_name {
             $(
                 #[error("$name")]
-                $name(Option<$crate::Args<'static>>),
+                $name(Option<$args_type>),
             )+
 
             #[error("unknown error, {0}")]
@@ -51,7 +49,7 @@ pub use aux_i18n::Args;
                 }
             }
 
-            pub fn get_i18n_args(&self) -> Option<&$crate::Args<'static>> {
+            pub fn get_i18n_args(&self) -> Option<&$args_type> {
                 match self {
                     $($enum_name::$name(a) => a.as_ref(),)+
                     $enum_name::Unknown(..) => None,
