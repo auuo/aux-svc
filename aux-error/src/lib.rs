@@ -26,7 +26,7 @@
         #[derive(Debug, thiserror::Error)]
         $vis enum $enum_name {
             $(
-                #[error("$name")]
+                #[error("{}", stringify!($name))]
                 $name(Option<$args_type>),
             )+
 
