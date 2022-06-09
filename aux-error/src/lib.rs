@@ -1,9 +1,10 @@
-/// 定义错误类型，携带一个错误码和 msg_key，msg key 可用于 i18n 使用
+/// 定义错误类型，携带 code、msg 和一个自定义类型的数据
 ///
 /// # Example
 ///
 /// ```
 /// aux_svc::define_error! {
+///     // 可用于传递 i18n 参数
 ///     pub AppError<aux_i18n::Args<'static>> {
 ///         MissBody(1, "miss_body");
 ///         InvalidParams(2, "invalid_params");
@@ -19,7 +20,7 @@
     (
         $(#[$docs:meta])*
         $vis:vis $enum_name:ident<$args_type:ty> {
-            $($name:ident($code:expr, $msg_key:expr);)+
+            $($name:ident($code:expr, $msg:expr);)+
         }
     ) => {
         $(#[$docs])*
@@ -42,14 +43,14 @@
                 }
             }
 
-            pub fn get_msg_key(&self) -> Option<&'static str> {
+            pub fn get_msg(&self) -> Option<&'static str> {
                 match self {
-                    $($enum_name::$name(..) => Some($msg_key),)+
+                    $($enum_name::$name(..) => Some($msg),)+
                     $enum_name::Unknown(..) => None,
                 }
             }
 
-            pub fn get_i18n_args(&self) -> Option<&$args_type> {
+            pub fn get_args(&self) -> Option<&$args_type> {
                 match self {
                     $($enum_name::$name(a) => a.as_ref(),)+
                     $enum_name::Unknown(..) => None,
