@@ -31,8 +31,8 @@
                 $name(Option<$args_type>),
             )+
 
-            #[error("unknown error, {0}")]
-            Unknown(anyhow::Error),
+            #[error(transparent)]
+            Unknown(#[from] anyhow::Error),
         }
 
         impl $enum_name {
@@ -57,10 +57,25 @@
                 }
             }
         }
+    }
+}
 
-        impl From<anyhow::Error> for $enum_name {
-            fn from(err: anyhow::Error) -> Self {
-                Self::Unknown(err)
+/// 用于定义可以 into 到 Unknown(anyhow::Error) 的类型
+///
+/// # Example
+///
+/// ```
+/// aux_error::define_error_from! {
+///     AppError(reqwest::Error) // 定义可从 reqwest::Error 类型转换到 Unknown 类型
+/// }
+///
+/// reqwest::get().await? // 可使用 ? 直接向上返回错误
+/// ```
+#[macro_export] macro_rules! define_error_from {
+    ($enum_name:ident($from_ty:ty);) => {
+        impl From<$from_ty> for $enum_name {
+            fn from(e: $from_ty) -> Self {
+                $enum_name::Unknown(e.into())
             }
         }
     }
