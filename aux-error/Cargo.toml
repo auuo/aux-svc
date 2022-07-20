@@ -3,6 +3,10 @@ name = "aux-error"
 version = "0.1.0"
 edition = "2018"
 
+license = "MIT OR Apache-2.0"
+description = "define errors"
+repository = "https://github.com/auuo/aux-svc/"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
