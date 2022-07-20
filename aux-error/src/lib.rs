@@ -34,21 +34,21 @@
         }
 
         impl $enum_name {
-            pub fn get_code(&self) -> Option<i32> {
+            pub fn code(&self) -> Option<i32> {
                 match self {
                     $($enum_name::$name(..) => Some($code),)+
                     $enum_name::Unknown(..) => None,
                 }
             }
 
-            pub fn get_msg(&self) -> Option<&'static str> {
+            pub fn msg(&self) -> Option<&'static str> {
                 match self {
                     $($enum_name::$name(..) => Some($msg),)+
                     $enum_name::Unknown(..) => None,
                 }
             }
 
-            pub fn get_args(&self) -> Option<&$args_type> {
+            pub fn args(&self) -> Option<&$args_type> {
                 match self {
                     $($enum_name::$name(a) => a.as_ref(),)+
                     $enum_name::Unknown(..) => None,
